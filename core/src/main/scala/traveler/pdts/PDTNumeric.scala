@@ -14,17 +14,18 @@ trait PDTNumeric[
 ]:
   val inst: InstantiablePDT[Mapping, P]
   def add(a: P, b: P): Target ?=> P
-  def addSpecific[T <: Target](using T)(using
+  inline def addSpecific[T <: Target](using T)(using
       num: Numeric[inst.ValueType[T]]
   )(a: P, b: P): P =
-    inst(num.plus(inst.unwrap(a), inst.unwrap(b)))
+    inst(num.plus(a.asInstanceOf[Mapping[RemoveAssumption[T]]], b.asInstanceOf[Mapping[RemoveAssumption[T]]]))
 
 
   def times(a: P, b: P): Target ?=> P 
-  def timesSpecific[T <: Target](using T)(
+  inline def timesSpecific[T <: Target](using T)(
     using num: Numeric[inst.ValueType[T]]
   )(a: P, b: P): P = 
-    inst(num.plus(inst.unwrap(a), inst.unwrap(b)))
+    num.plus(a.asInstanceOf[inst.ValueType[T]], b.asInstanceOf[inst.ValueType[T]]).asInstanceOf[P]
+    //inst(num.plus(inst.unwrap(a), inst.unwrap(b)))
 
 object PDTNumeric:
   type NumericTypes = Float | Double | Int | Short | Byte | Long

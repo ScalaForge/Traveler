@@ -50,4 +50,7 @@ import scala.compiletime.codeOf
           )
       }
     )
+
+    println(5f)
+    println(java.lang.Float.intBitsToFloat(java.lang.Float.floatToRawIntBits(5.5)))
   }

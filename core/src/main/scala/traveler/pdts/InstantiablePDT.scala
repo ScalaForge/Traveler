@@ -15,7 +15,7 @@ trait InstantiablePDT[Mapping[_ <: Target] <: Matchable, T]:
       t: Target
   ): Option[T]
 
-  def unspecificCastTo(p: PDT[Mapping]): T
+  //def unspecificCastTo(p: PDT[Mapping]): T
 
   def apply[U <: Target](using t: U)(v: ValueType[U]): T
 
