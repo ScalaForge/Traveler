@@ -33,30 +33,30 @@ object NumericPDT:
       case 3 => v.toInt.asInstanceOf[mapping.value.M[T]]
       case 4 => v.toLong.asInstanceOf[mapping.value.M[T]]
 
-  inline def inlApply[Mapping <: NumericMapping & Singleton, NP <: NumericPDT[Mapping]](
-    using t: Target,
-    eqG: NumericPDT[Mapping] =:= NP,
-    mapping: ValueOf[Mapping]
-  )(v: SumMapping[mapping.value.M, SupportedTargets]): Option[NP] = 
-    t match
-      case LinuxX64 => 
-        v match 
-          case u: Mapping[LinuxX64.type] => Some(eqG(NumericData(u)))
-          case _ => None
-      case WinX64 => 
-        v match
-          case u: Mapping[WinX64.type] => Some(eqG(NumericData(u)))
-          case _ => None 
+  // inline def inlApply[Mapping <: NumericMapping & Singleton, NP <: NumericPDT[Mapping]](
+  //   using t: Target,
+  //   eqG: NumericPDT[Mapping] =:= NP,
+  //   mapping: ValueOf[Mapping]
+  // )(v: SumMapping[mapping.value.M, SupportedTargets]): Option[NP] = 
+  //   t match
+  //     case LinuxX64 => 
+  //       v match 
+  //         case u: Mapping[LinuxX64.type] => Some(eqG(NumericData(u)))
+  //         case _ => None
+  //     case WinX64 => 
+  //       v match
+  //         case u: Mapping[WinX64.type] => Some(eqG(NumericData(u)))
+  //         case _ => None 
 
-      case MacX64 => 
-        v match
-          case u: Mapping[MacX64.type] => Some(eqG(NumericData(u)))
-          case _ => None 
+  //     case MacX64 => 
+  //       v match
+  //         case u: Mapping[MacX64.type] => Some(eqG(NumericData(u)))
+  //         case _ => None 
 
-  def apply[Mapping[_ <: Target] <: NumericTypes, NP <: NumericPDT[Mapping], T <: Target](using 
-    t: T,
-    eqG: NumericPDT[Mapping] =:= NP
-  )(v: Mapping[RemoveAssumption[T]]): NP = eqG(NumericData(v))
+  // def apply[Mapping[_ <: Target] <: NumericTypes, NP <: NumericPDT[Mapping], T <: Target](using 
+  //   t: T,
+  //   eqG: NumericPDT[Mapping] =:= NP
+  // )(v: Mapping[RemoveAssumption[T]]): NP = eqG(NumericData(v))
 
             
         

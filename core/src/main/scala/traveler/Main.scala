@@ -7,6 +7,8 @@ import traveler.pdts.ContextFlattener3
 import traveler.pdts.Arity
 import traveler.Target.Assumption
 import scala.compiletime.codeOf
+import traveler.pdts.NumericMapping
+import traveler.pdts.NumericPDT
 
 @main def program =
   given Target = LinuxX64
@@ -54,3 +56,10 @@ import scala.compiletime.codeOf
     println(5f)
     println(java.lang.Float.intBitsToFloat(java.lang.Float.floatToRawIntBits(5.5)))
   }
+
+
+  type M[T <: Target] <: NumericPDT.NumericTypes = T match 
+    case LinuxX64.type | MacX64.type => Int
+    case WinX64.type => Float
+
+  NumericMapping.create[M]

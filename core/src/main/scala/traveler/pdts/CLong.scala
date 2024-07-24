@@ -13,8 +13,8 @@ import traveler.pdts.InstantiableNPDT
 
 opaque type CLong <: PDT[CLong.Mapping] = PDT[CLong.Mapping]
 
-opaque type CLongNumeric <: NumericPDT[CLong.Mapping] =
-  NumericPDT[CLong.Mapping]
+// opaque type CLongNumeric <: NumericPDT[CLong.Mapping] =
+//   NumericPDT[CLong.Mapping]
 
 object CLong:
   type Mapping[T <: Target] <: PDTNumeric.NumericTypes = T match
@@ -25,8 +25,8 @@ object CLong:
 
   given PDTNumeric[Mapping, CLong] = PDTNumeric.derive
 
-  def num[T <: Target](using t: T)(
-      v: Mapping[RemoveAssumption[T]]
-  ): CLongNumeric = NumericPDT[CLong.Mapping, CLongNumeric, T](v)
+  // def num[T <: Target](using t: T)(
+  //     v: Mapping[RemoveAssumption[T]]
+  // ): CLongNumeric = NumericPDT[CLong.Mapping, CLongNumeric, T](v)
 
-  given InstantiableNPDT[Mapping, CLongNumeric] = ???//InstantiableNPDT.derive
+  // given InstantiableNPDT[Mapping, CLongNumeric] = ???//InstantiableNPDT.derive
