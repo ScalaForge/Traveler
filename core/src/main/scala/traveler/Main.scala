@@ -63,3 +63,4 @@ type M[T <: Target] <: NumericPDT.NumericTypes = T match
   case WinX64.type => Float
 
 val nm = NumericMapping.create[M]
+

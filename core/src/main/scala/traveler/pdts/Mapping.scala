@@ -35,7 +35,7 @@ object NumericMapping:
   ): Option[q.reflect.TypeRepr] =
     import scala.quoted.quotes.reflect.*
     typ match
-      case TypeRef(prefix, name)         => println("here")
+      case t @ TypeRef(prefix, name)         => println("here")
         val x = TypeRepr.of[traveler.M]
 
         //TypeRef(TermRef(TermRef(ThisType(TypeRef(NoPrefix(), "<root>")), "traveler"), "Main$package"), "M")
@@ -43,10 +43,12 @@ object NumericMapping:
         val symbol = Symbol.requiredClass(s).typeRef
         
 
+        getMatchType(t.translucentSuperType)
+
 
         //report.errorAndAbort(s"${x.show(using Printer.TypeReprStructure)}")
         //report.errorAndAbort(s"${x =:= symbol}")
-        None
+        //None
         //getMatchType(prefix.memberType(Symbol.classSymbol(name)))
       case TypeLambda(_, _, r) => getMatchType(r)
       case m: MatchType        => Some(m)
@@ -60,19 +62,28 @@ object NumericMapping:
     import scala.quoted.quotes.reflect.*
 
     // report.errorAndAbort(s"cannot find match type in ${TypeRepr.of[M]}")
-    // val patterns = getMatchType(TypeRepr.of[M]).getOrElse(
-    //   report.errorAndAbort(s"cannot find match type in ${TypeRepr.of[M].show}")
-    // ) match
-    //   case MatchType(_, _, cases) =>
-    //     cases.flatMap { case MatchCase(pattern, rhs) =>
-    //       _orToList(pattern)
-    //     }
+    val patterns = getMatchType(TypeRepr.of[M]).getOrElse(
+      report.errorAndAbort(s"cannot find match type in ${TypeRepr.of[M].show}")
+    ) match
+      case MatchType(_, _, cases) =>
+        cases.flatMap { case MatchCase(pattern, rhs) =>
+          _orToList(pattern)
+        }
 
     // // report.errorAndAbort("hello")
-    // report.errorAndAbort(patterns.map(_.show).toString())
+    //report.errorAndAbort(TypeRepr.of[[A <: Target] =>> A].show(using Printer.TypeReprStructure))
 
-    '{
-      new NumericMapping:
-        type M[T] = Int 
-        def apply(t: Target): Int = 5
-    }
+    
+    val tl = TypeLambda(List("T"), _ => List(TypeBounds.lower(TypeRepr.of[Target])), tl => TypeRepr.of[M].appliedTo(tl.typeArgs))
+    
+    //MatchType(TypeRepr.of[NumericPDT.NumericTypes], )
+
+    tl.asType match 
+      case '[[T] =>> Option] => 
+        '{
+          new NumericMapping:
+            type M[T] = [T] =>> Option
+            def apply(t: Target): Int = 5
+        }
+      case _ => report.errorAndAbort("uhoh")
+
