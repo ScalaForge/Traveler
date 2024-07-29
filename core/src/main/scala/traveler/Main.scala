@@ -62,5 +62,8 @@ type M[T <: Target] <: NumericPDT.NumericTypes = T match
   case LinuxX64.type | MacX64.type => Int
   case WinX64.type => Float
 
-val nm = NumericMapping.create[M]
+val nm = NumericMapping.create[[T <: Target] =>> T match 
+  case LinuxX64.type | MacX64.type => Int 
+  case WinX64.type => Float
+]
 

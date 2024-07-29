@@ -5,7 +5,7 @@ import traveler.pdts.NumericPDT.NumericTypes
 import scala.quoted.Quotes
 import scala.quoted.Expr
 import scala.quoted.Type
-
+import traveler.Target.LinuxX64
 
 trait Mapping:
   type M[_ <: Target] <: Matchable
@@ -35,21 +35,20 @@ object NumericMapping:
   ): Option[q.reflect.TypeRepr] =
     import scala.quoted.quotes.reflect.*
     typ match
-      case t @ TypeRef(prefix, name)         => println("here")
+      case t @ TypeRef(prefix, name) =>
+        println("here")
         val x = TypeRepr.of[traveler.M]
 
-        //TypeRef(TermRef(TermRef(ThisType(TypeRef(NoPrefix(), "<root>")), "traveler"), "Main$package"), "M")
+        // TypeRef(TermRef(TermRef(ThisType(TypeRef(NoPrefix(), "<root>")), "traveler"), "Main$package"), "M")
         val s = "traveler.M"
         val symbol = Symbol.requiredClass(s).typeRef
-        
 
         getMatchType(t.translucentSuperType)
 
-
-        //report.errorAndAbort(s"${x.show(using Printer.TypeReprStructure)}")
-        //report.errorAndAbort(s"${x =:= symbol}")
-        //None
-        //getMatchType(prefix.memberType(Symbol.classSymbol(name)))
+      // report.errorAndAbort(s"${x.show(using Printer.TypeReprStructure)}")
+      // report.errorAndAbort(s"${x =:= symbol}")
+      // None
+      // getMatchType(prefix.memberType(Symbol.classSymbol(name)))
       case TypeLambda(_, _, r) => getMatchType(r)
       case m: MatchType        => Some(m)
       case NoPrefix            => None
@@ -66,17 +65,39 @@ object NumericMapping:
       report.errorAndAbort(s"cannot find match type in ${TypeRepr.of[_M].show}")
     ) match
       case MatchType(_, _, cases) =>
-        cases.flatMap { case MatchCase(pattern, rhs) =>
-          _orToList(pattern)
+        cases.map { case MatchCase(pattern, rhs) =>
+          pattern -> rhs
         }
 
-    // // report.errorAndAbort("hello")
-    //report.errorAndAbort(TypeRepr.of[[A <: Target] =>> A].show(using Printer.TypeReprStructure))
+    val badPatterns = patterns
+      .groupBy(_._2)
+      .filter(_._2.size != 1)
+      .values
+      .flatten
+      .map(p => s"${p._1.show} => ${p._2.show}")
+    if badPatterns.nonEmpty then
+      report.warning(
+        s"[Error code 1] Multiple cases map to the same underlying type. Consider using a union type to merge these cases: ${badPatterns
+            .mkString("\n\t", "\n\t", "")}"
+      )
+    // report.info(patterns.map(p => s"${p._1.show} -> ${p._2.show}").toString())
 
-    
+    // // report.errorAndAbort("hello")
+    // report.errorAndAbort(TypeRepr.of[[A <: Target] =>> A].show(using Printer.TypeReprStructure))
+
+    // def matchCode(target: Expr[Target])(using Quotes): Expr[Int] =
+    //   // val term = target.asTerm
+    //   // val res = Match(term, List(CaseDef(Literal(IntConstant(LinuxX64.id)), None, Literal(IntConstant(1))))).asExprOf[Int]
+    //   // report.info(
+    //   //   res.show
+    //   // )
+
+    //   '{${target}.id}
+
+    // val matchCase =
+    //   patterns.flatMap(p => _orToList(p._1).map(_ -> p._2))
     '{
       new NumericMapping:
         type M[T <: Target] = _M[T]
-        def apply(t: Target): Int = 5
+        def apply(t: Target): Int = 1
     }
-
