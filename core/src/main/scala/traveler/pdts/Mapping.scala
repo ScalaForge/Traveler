@@ -12,13 +12,13 @@ trait Mapping:
   def apply(t: Target): Unit = ???
 
 trait NumericMapping:
-  type M[_ <: Target] <: NumericTypes
+  type M[T <: Target] <: NumericPDT.NumericTypes
   def apply(t: Target): Int
 
 object NumericMapping:
-  transparent inline def create[M[_ <: Target] <: PDTNumeric.NumericTypes]
+  transparent inline def create[_M[_ <: Target] <: PDTNumeric.NumericTypes]
       : NumericMapping =
-    ${ _create[M] }
+    ${ _create[_M] }
 
   private def _orToList(using q: Quotes)(
       typ: q.reflect.TypeRepr
@@ -55,15 +55,15 @@ object NumericMapping:
       case NoPrefix            => None
       case _                   => None
 
-  private def _create[M[_ <: Target] <: PDTNumeric.NumericTypes](using
+  private def _create[_M[_ <: Target] <: PDTNumeric.NumericTypes](using
       Quotes,
-      Type[M]
+      Type[_M]
   ): Expr[NumericMapping] =
     import scala.quoted.quotes.reflect.*
 
     // report.errorAndAbort(s"cannot find match type in ${TypeRepr.of[M]}")
-    val patterns = getMatchType(TypeRepr.of[M]).getOrElse(
-      report.errorAndAbort(s"cannot find match type in ${TypeRepr.of[M].show}")
+    val patterns = getMatchType(TypeRepr.of[_M]).getOrElse(
+      report.errorAndAbort(s"cannot find match type in ${TypeRepr.of[_M].show}")
     ) match
       case MatchType(_, _, cases) =>
         cases.flatMap { case MatchCase(pattern, rhs) =>
@@ -74,16 +74,9 @@ object NumericMapping:
     //report.errorAndAbort(TypeRepr.of[[A <: Target] =>> A].show(using Printer.TypeReprStructure))
 
     
-    val tl = TypeLambda(List("T"), _ => List(TypeBounds.lower(TypeRepr.of[Target])), tl => TypeRepr.of[M].appliedTo(tl.typeArgs))
-    
-    //MatchType(TypeRepr.of[NumericPDT.NumericTypes], )
-
-    tl.asType match 
-      case '[[T] =>> Option] => 
-        '{
-          new NumericMapping:
-            type M[T] = [T] =>> Option
-            def apply(t: Target): Int = 5
-        }
-      case _ => report.errorAndAbort("uhoh")
+    '{
+      new NumericMapping:
+        type M[T <: Target] = _M[T]
+        def apply(t: Target): Int = 5
+    }
 
