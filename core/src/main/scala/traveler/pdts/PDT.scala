@@ -13,28 +13,6 @@ opaque type PDT[TargetMapping[_ <: Target] <: Matchable] <: Matchable =
   Matchable
 
 object PDT:
-  @nowarn("msg=Unreachable case except for null")
-  def inlApply[Mapping[_ <: Target] <: Matchable, P <: PDT[Mapping]](
-      using
-      t: Target,
-      eqG: PDT[Mapping] =:= P
-  )(v: SumMapping[Mapping, SupportedTargets]): Option[P] =
-    (t.id: @switch) match
-      case 1 =>
-        v match
-          case u: Mapping[LinuxX64.type] => Some(eqG(u))
-          case _                    => None
-
-      case 2 =>
-        v match
-          case u: Mapping[WinX64.type] => Some(eqG(u))
-          case _                  => None
-
-      case 3 =>
-        v match
-          case u: Mapping[MacX64.type] => Some(eqG(u))
-          case _                  => None
-
   def apply[Mapping[_ <: Target] <: Matchable, P <: PDT[Mapping], T <: Target](
       using
       t: T,

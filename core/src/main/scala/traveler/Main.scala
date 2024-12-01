@@ -9,61 +9,54 @@ import traveler.Target.Assumption
 import scala.compiletime.codeOf
 import traveler.pdts.NumericMapping
 import traveler.pdts.NumericPDT
+import traveler.pdts.NumericTypes
+import traveler.pdts.Int23
 
 @main def program =
-  given Target = LinuxX64
-  println(CLong.given_InstantiablePDT_Mapping_CLong.unspecific(2.0f))
-
-  {
-    given WinX64.type = WinX64
-
-    println(CLong.given_InstantiablePDT_Mapping_CLong(5.0f))
-  }
-
-  // val cfn: (Int, Float) ?=> String =
-
-  type cfn = (Int, Float) ?=> String
-  type fcfn = ContextFlattener[cfn]
-
-  // summon[fcfn =:= (Int ?=> Float ?=> String)]
-
-  val fcfn: ContextFlattener3[(Int, Float, String) ?=> String, 3] = (i: Int) ?=>
-    (f: Float) ?=> (s: String) ?=> ((i + f).toString() + s)
-
-  println(fcfn(using 1)(using 2)(using "hello"))
-
-  println(summon[Arity[Int => Float]].out)
-
-  Target.assume[LinuxX64.type].apply {
-    println(CLong.given_InstantiablePDT_Mapping_CLong(5L))
+  val a = CLong.given_InstantiablePDT_Mapping_CLong.unspecific(5l)
+  val b = CLong.given_InstantiablePDT_Mapping_CLong.unspecific(5f)
+  val c = CLong.given_InstantiablePDT_Mapping_CLong.unspecific(6l)
+  //broken
+  for 
+    readyA <- a
+    readyB <- b 
+  do 
+    println("I shouldn't run!!")
     println(
-      CLong.given_PDTNumeric_Mapping_CLong.add(
-        CLong.given_InstantiablePDT_Mapping_CLong(5L),
-        CLong.given_InstantiablePDT_Mapping_CLong(10L)
-      )
+      CLong.given_PDTNumeric_Mapping_CLong.add(readyA, readyB)
     )
 
-    println(
-      codeOf {
-        CLong.given_PDTNumeric_Mapping_CLong
-          .addSpecific(
-            CLong.given_InstantiablePDT_Mapping_CLong(5L),
-            CLong.given_InstantiablePDT_Mapping_CLong(20L)
-          )
-      }
-    )
+  for 
+    readyA <- a 
+    readyC <- c 
+  do println(
+    CLong.given_PDTNumeric_Mapping_CLong.add(readyA, readyC)
+  )
 
-    println(5f)
-    println(java.lang.Float.intBitsToFloat(java.lang.Float.floatToRawIntBits(5.5)))
+
+  Target.assume[Target.LinuxX64]{
+    val d = CLong.given_InstantiablePDT_Mapping_CLong(5l)
+    val e = CLong.given_InstantiablePDT_Mapping_CLong(6l)
+    println(CLong.given_PDTNumeric_Mapping_CLong.add(d,e))
+    println("raw sum")
+    println(CLong.given_InstantiablePDT_Mapping_CLong.unwrap(d) + CLong.given_InstantiablePDT_Mapping_CLong.unwrap(e))
   }
 
+  println(Target.assume[Target.WinX64]{
+    val d = CLong.given_InstantiablePDT_Mapping_CLong(5l)
+    val e =CLong.given_InstantiablePDT_Mapping_CLong(7l)
+    println("i shouldn't run!!")
+    println(CLong.given_PDTNumeric_Mapping_CLong.add(d,e))
+  })
 
-type M[T <: Target] <: NumericPDT.NumericTypes = T match 
-  case LinuxX64.type | MacX64.type => Int
-  case WinX64.type => Float
+  //println(NumericMapping.create[M].fn(LinuxX64))
 
-val nm = NumericMapping.create[[T <: Target] =>> T match 
-  case LinuxX64.type | MacX64.type => Int 
-  case WinX64.type => Float
-]
+type M[T <: Target] <: NumericTypes = T match 
+  case Target.LinuxX64 | Target.MacX64 => Int
+  case Target.WinX64 => Float
+
+type M2[T <: Target] = Int 
+
+val yyy: pdts.MappingMinima[M, Target.SupportedTargets, Double] = Int23(5).get
+
 

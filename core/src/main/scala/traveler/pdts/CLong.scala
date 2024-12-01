@@ -1,6 +1,5 @@
 package traveler
 
-import traveler.Target.{LinuxX64, WinX64, MacX64}
 import traveler.pdts.InstantiablePDT
 import traveler.pdts.PDT
 import traveler.pdts.PDTNumeric
@@ -10,6 +9,7 @@ import traveler.pdts.NumericData
 import traveler.pdts.NumericPDT.NumericTypes
 import traveler.pdts.RemoveAssumption
 import traveler.pdts.InstantiableNPDT
+import traveler.pdts.MappingMinima
 
 opaque type CLong <: PDT[CLong.Mapping] = PDT[CLong.Mapping]
 
@@ -18,8 +18,10 @@ opaque type CLong <: PDT[CLong.Mapping] = PDT[CLong.Mapping]
 
 object CLong:
   type Mapping[T <: Target] <: PDTNumeric.NumericTypes = T match
-    case LinuxX64.type | MacX64.type => Long
-    case WinX64.type                 => Float
+    case Target.LinuxX64 | Target.MacX64 => Int
+    case Target.WinX64                 => Float
+
+  val x: MappingMinima[Mapping, Target.SupportedTargets, Double] = 5f
 
   given InstantiablePDT[Mapping, CLong] = InstantiablePDT.derive
 

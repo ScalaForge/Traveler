@@ -1,6 +1,6 @@
 organization := "ScalaForge"
 name := "Traveler"
-scalaVersion := "3.5.0-RC4"
+scalaVersion := "3.3.0"
 
 
 lazy val core = project.settings(
