@@ -7,7 +7,6 @@ import scala.compiletime.codeOf
 import traveler.pdts.NumericPDT
 import traveler.pdts.NumericData
 import traveler.pdts.NumericPDT.NumericTypes
-import traveler.pdts.RemoveAssumption
 import traveler.pdts.InstantiableNPDT
 import traveler.pdts.MappingMinima
 

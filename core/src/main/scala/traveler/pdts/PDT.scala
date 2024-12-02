@@ -17,13 +17,13 @@ object PDT:
       using
       t: T,
       eqG: PDT[Mapping] =:= P
-  )(v: Mapping[RemoveAssumption[T]]): P =
+  )(v: Mapping[T]): P =
     eqG(v)
 
   def unwrap[Mapping[_ <: Target] <: Matchable, P <: PDT[Mapping], T <: Target](
       using
       t: T,
       eqG: P =:= PDT[Mapping]
-  )(v: P): Mapping[RemoveAssumption[T]] = eqG(v) match
-    case res: Mapping[RemoveAssumption[T]] => res
-    case _ => throw new Error("I shouldn't be here")
+  )(v: P): Mapping[T] = eqG(v) match
+    case res: Mapping[T] => res
+    case _               => throw new Error("I shouldn't be here")

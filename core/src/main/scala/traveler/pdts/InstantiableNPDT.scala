@@ -25,7 +25,7 @@ object InstantiableNPDT:
       val minimaNum =
         summonInline[Numeric[MappingMinima[Mapping, SupportedTargets, Long]]]
       val ipdt = InstantiablePDT.derive[Mapping, P]
-      def apply[U <: Target](using t: U)(v: Mapping[RemoveAssumption[U]]): P =
+      def apply[U <: Target](using t: U)(v: Mapping[U]): P =
         ipdt.apply(v)
       def fromMinima(
           value: MappingMinima[Mapping, SupportedTargets, Double]

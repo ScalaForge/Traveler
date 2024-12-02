@@ -12,7 +12,7 @@ import scala.reflect.ClassTag
 import scala.annotation.switch
 
 trait InstantiablePDT[Mapping[_ <: Target] <: Matchable, T]:
-  type ValueType[T <: Target] = Mapping[RemoveAssumption[T]]
+  type ValueType[T <: Target] = Mapping[T]
   def unspecific(u: SumMapping[Mapping, SupportedTargets])(using
       t: Target
   ): Option[T]
@@ -34,14 +34,14 @@ object InstantiablePDT:
           t: Target
       )(a: SumMapping[Mapping, SupportedTargets]): Option[P] =
         t.reveal[[T <: Target] =>> Tuple1[
-          ClassTag[Mapping[RemoveAssumption[T]]]
+          ClassTag[Mapping[T]]
         ], Option[P]](
           [T <: Target] =>
             (t: T) ?=>
               tup =>
-                given ClassTag[Mapping[RemoveAssumption[T]]] = tup._1
+                given ClassTag[Mapping[T]] = tup._1
                 a match
-                  case b: Mapping[RemoveAssumption[T]] =>
+                  case b: Mapping[T] =>
                     Some(conv(PDT(b)))
                   case _ => None
         )
@@ -52,8 +52,8 @@ object InstantiablePDT:
 
       def unspecificCastTo(p: PDT[Mapping]): P = conv(p)
 
-      def apply[U <: Target](using t: U)(v: Mapping[RemoveAssumption[U]]): P =
+      def apply[U <: Target](using t: U)(v: Mapping[U]): P =
         PDT[Mapping, P, U](using t, conv)(v)
 
-      def unwrap[U <: Target](using t: U)(p: P): Mapping[RemoveAssumption[U]] =
+      def unwrap[U <: Target](using t: U)(p: P): Mapping[U] =
         PDT.unwrap(p)

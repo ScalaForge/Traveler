@@ -5,7 +5,6 @@ import traveler.pdts.flattenContext
 import traveler.pdts.ContextFlattener
 import traveler.pdts.ContextFlattener3
 import traveler.pdts.Arity
-import traveler.Target.Assumption
 import scala.compiletime.codeOf
 import traveler.pdts.NumericMapping
 import traveler.pdts.NumericPDT

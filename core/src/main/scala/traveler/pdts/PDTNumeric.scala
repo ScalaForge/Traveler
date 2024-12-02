@@ -5,7 +5,6 @@ import traveler.Target.LinuxX64
 import scala.compiletime.summonInline
 import traveler.Target.MacX64
 import traveler.Target.WinX64
-import traveler.Target.Assumption
 import scala.annotation.switch
 
 trait PDTNumeric[
@@ -19,8 +18,8 @@ trait PDTNumeric[
   )(a: P, b: P): P =
     inst(
       num.plus(
-        a.asInstanceOf[Mapping[RemoveAssumption[T]]],
-        b.asInstanceOf[Mapping[RemoveAssumption[T]]]
+        a.asInstanceOf[Mapping[T]],
+        b.asInstanceOf[Mapping[T]]
       )
     )
 
@@ -49,10 +48,10 @@ object PDTNumeric:
       def withContext[A](
           fn: [T <: Target] => (
               t: T
-          ) ?=> Numeric[Mapping[RemoveAssumption[T]]] => A
+          ) ?=> Numeric[Mapping[T]] => A
       )(using t: Target) =
         t.reveal[[T <: Target] =>> Tuple1[
-          Numeric[Mapping[RemoveAssumption[T]]]
+          Numeric[Mapping[T]]
         ], A](
           [T <: Target] => (t: T) ?=> tup => fn[T](tup._1)
         )

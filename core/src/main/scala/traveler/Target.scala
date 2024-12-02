@@ -1,7 +1,6 @@
 package traveler
 
 import scala.reflect.TypeTest
-import traveler.Target.Assumption
 import traveler.pdts.{Output, Curry}
 import scala.compiletime.{
   erasedValue,
@@ -54,23 +53,17 @@ object Target:
   given target: Target =
     new LinuxX64 {}
 
-  sealed case class Assumption[T <: Target] private[Target] (real: Target)
-      extends Target:
-    val id = 4
-    val realId: Int = real.id
-
   type SupportedTargets = (LinuxX64, WinX64, MacX64)
 
   class Curried[T <: Target]:
-    def apply[A](fn: Assumption[T] ?=> A)(using
+    def apply[A](fn: T ?=> A)(using
         TypeTest[Target, T]
     ): Target ?=> Option[A] =
       val target = summon[Target]
 
       target match
-        case _: T =>
-          given Assumption[T] =
-            new Assumption[T](target) // (Assumption[T](target): T)
+        case _target: T =>
+          given T = _target
           Some(fn)
 
         case _ => None
