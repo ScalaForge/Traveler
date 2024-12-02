@@ -1,7 +1,6 @@
 package traveler
 
 import scala.reflect.TypeTest
-import traveler.pdts.{Output, Curry}
 import scala.compiletime.{
   erasedValue,
   summonInline,
@@ -9,8 +8,6 @@ import scala.compiletime.{
   error,
   uninitialized
 }
-import scala.compiletime.ops.any.ToString
-import traveler.pdts.TupledApplication
 import scala.annotation.switch
 
 sealed trait Target:

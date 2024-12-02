@@ -1,15 +1,8 @@
 package traveler
 
 import traveler.Target.{WinX64, LinuxX64, MacX64}
-import traveler.pdts.flattenContext
-import traveler.pdts.ContextFlattener
-import traveler.pdts.ContextFlattener3
-import traveler.pdts.Arity
 import scala.compiletime.codeOf
-import traveler.pdts.NumericMapping
-import traveler.pdts.NumericPDT
-import traveler.pdts.NumericTypes
-import traveler.pdts.Int23
+import traveler.pdts.PDTNumeric.IntegralTypes
 
 @main def program =
   val a = CLong.given_InstantiablePDT_Mapping_CLong.unspecific(5L)
@@ -54,9 +47,9 @@ import traveler.pdts.Int23
 
   // println(NumericMapping.create[M].fn(LinuxX64))
 
-type M[T <: Target] <: NumericTypes = T match
+type M[T <: Target] <: IntegralTypes = T match
   case Target.LinuxX64 | Target.MacX64 => Int
-  case Target.WinX64                   => Float
+  case Target.WinX64                   => Short
 
 type M2[T <: Target] = Int
 

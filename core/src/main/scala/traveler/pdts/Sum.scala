@@ -35,7 +35,7 @@ type IntegralMinimum[
 
 type MappingMinima[Mapping[
     _ <: Target
-] <: NumericPDT.NumericTypes, TargetTup <: Tuple, Minima <: NumericPDT.NumericTypes] <: NumericPDT.NumericTypes =
+] <: PDTNumeric.IntegralTypes, TargetTup <: Tuple, Minima <: PDTNumeric.IntegralTypes] <: PDTNumeric.IntegralTypes =
   TargetTup match
     case h *: t =>
       MappingMinima[Mapping, t, IntegralMinimum[Mapping[h], Minima]]

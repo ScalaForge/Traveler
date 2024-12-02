@@ -3,25 +3,20 @@ package traveler.pdts
 import traveler.Target
 import traveler.Target.SupportedTargets
 
-import scala.compiletime.erasedValue
 import scala.compiletime.summonInline
-import traveler.Target.LinuxX64
-import traveler.Target.WinX64
 import scala.annotation.nowarn
 import scala.reflect.ClassTag
-import scala.annotation.switch
 
 trait InstantiablePDT[Mapping[_ <: Target] <: Matchable, T]:
-  type ValueType[T <: Target] = Mapping[T]
   def unspecific(u: SumMapping[Mapping, SupportedTargets])(using
       t: Target
   ): Option[T]
 
   // def unspecificCastTo(p: PDT[Mapping]): T
 
-  def apply[U <: Target](using t: U)(v: ValueType[U]): T
+  def apply[U <: Target](using t: U)(v: Mapping[U]): T
 
-  def unwrap[U <: Target](using t: U)(p: T): ValueType[U]
+  def unwrap[U <: Target](using t: U)(p: T): Mapping[U]
 
 object InstantiablePDT:
   @nowarn(

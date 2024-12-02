@@ -3,9 +3,12 @@ import sbt.Keys._
 
 object Config {
   val baseConfig = Seq(
-    scalaVersion := "3.5.0-RC4",
+    scalaVersion := "3.6.2-RC3",
     organization := "ScalaForge",
-    libraryDependencies += "org.scalameta" %% "munit" % "1.0.1" % Test
+    libraryDependencies += "org.scalameta" %% "munit" % "1.0.1" % Test,
+    scalacOptions ++= Seq(
+      "-Wall"
+    )
   )
 
   val coreConfig = baseConfig ++ Seq(

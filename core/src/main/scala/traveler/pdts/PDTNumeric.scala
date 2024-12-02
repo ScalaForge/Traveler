@@ -1,11 +1,8 @@
 package traveler.pdts
 
 import traveler.Target
-import traveler.Target.LinuxX64
 import scala.compiletime.summonInline
-import traveler.Target.MacX64
-import traveler.Target.WinX64
-import scala.annotation.switch
+import annotation.nowarn
 
 trait PDTNumeric[
     Mapping[_ <: Target] <: PDTNumeric.IntegralTypes,
@@ -13,31 +10,14 @@ trait PDTNumeric[
 ]:
   val inst: InstantiablePDT[Mapping, P]
   def add(a: P, b: P): Target ?=> P
-  inline def addSpecific[T <: Target](using T)(using
-      num: Numeric[inst.ValueType[T]]
-  )(a: P, b: P): P =
-    inst(
-      num.plus(
-        a.asInstanceOf[Mapping[T]],
-        b.asInstanceOf[Mapping[T]]
-      )
-    )
-
   def times(a: P, b: P): Target ?=> P
-  inline def timesSpecific[T <: Target](using T)(using
-      num: Numeric[inst.ValueType[T]]
-  )(a: P, b: P): P =
-    num
-      .plus(
-        a.asInstanceOf[inst.ValueType[T]],
-        b.asInstanceOf[inst.ValueType[T]]
-      )
-      .asInstanceOf[P]
-    // inst(num.plus(inst.unwrap(a), inst.unwrap(b)))
 
 object PDTNumeric:
   type NumericTypes = Float | Double | IntegralTypes
   type IntegralTypes = Byte | Short | Int | Long
+  @nowarn(
+    "msg=New anonymous class definition will be duplicated at each inline site"
+  )
   inline def derive[
       Mapping[_ <: Target] <: IntegralTypes,
       P <: PDT[Mapping]
