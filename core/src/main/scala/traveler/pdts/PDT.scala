@@ -2,7 +2,6 @@ package traveler.pdts
 
 import traveler.Target
 import scala.reflect.ClassTag
-import traveler.pdts.Mapping
 
 opaque type PDT <: Matchable =
   Matchable
