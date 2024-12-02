@@ -15,5 +15,5 @@ object Inputs:
   given ar1FnInputs[A, ZZ]: (Inputs[A => ZZ] { type Out = Tuple1[A] }) =
     ar1FnInputs.asInstanceOf[Inputs[A => ZZ] { type Out = Tuple1[A] }]
 
-  given ar2FnInputs[A, B, ZZ]: (Inputs[(A, B) => ZZ] { type Out = (A, B) }) = 
-    ar2FnInputs.asInstanceOf[Inputs[(A,B) => ZZ] { type Out = (A, B)}]
+  given ar2FnInputs[A, B, ZZ]: (Inputs[(A, B) => ZZ] { type Out = (A, B) }) =
+    ar2FnInputs.asInstanceOf[Inputs[(A, B) => ZZ] { type Out = (A, B) }]

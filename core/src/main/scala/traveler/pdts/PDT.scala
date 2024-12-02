@@ -25,7 +25,5 @@ object PDT:
       t: T,
       eqG: P =:= PDT[Mapping]
   )(v: P): Mapping[RemoveAssumption[T]] = eqG(v) match
-    case res: Mapping[RemoveAssumption[T]] => res 
+    case res: Mapping[RemoveAssumption[T]] => res
     case _ => throw new Error("I shouldn't be here")
-    
-  

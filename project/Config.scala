@@ -9,6 +9,6 @@ object Config {
   )
 
   val coreConfig = baseConfig ++ Seq(
-    name := "traveler-core",
+    name := "traveler-core"
   )
 }

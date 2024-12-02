@@ -6,9 +6,9 @@ trait Curry[A]:
 
 object Curry:
   sealed trait Ar1Fn extends Curry[Any => Any]:
-    type Out = Any => Any 
-    def apply(fn: Any => Any): Any => Any = fn 
+    type Out = Any => Any
+    def apply(fn: Any => Any): Any => Any = fn
 
   sealed trait Ar2Fn extends Curry[(Any, Any) => Any]:
-    type Out = Any => Any => Any 
-    def apply(fn: (Any, Any) => Any): Out = (a: Any) => (b: Any) => fn(a,b)
+    type Out = Any => Any => Any
+    def apply(fn: (Any, Any) => Any): Out = (a: Any) => (b: Any) => fn(a, b)

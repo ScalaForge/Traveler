@@ -17,11 +17,11 @@ opaque type CLong <: PDT[CLong.Mapping] = PDT[CLong.Mapping]
 //   NumericPDT[CLong.Mapping]
 
 object CLong:
-  type Mapping[T <: Target] <: PDTNumeric.NumericTypes = T match
-    case Target.LinuxX64 | Target.MacX64 => Int
-    case Target.WinX64                 => Float
+  type Mapping[T <: Target] <: PDTNumeric.IntegralTypes = T match
+    case Target.LinuxX64 | Target.MacX64 => Long
+    case Target.WinX64                   => Int
 
-  val x: MappingMinima[Mapping, Target.SupportedTargets, Double] = 5f
+  val x: MappingMinima[Mapping, Target.SupportedTargets, Long] = 5
 
   given InstantiablePDT[Mapping, CLong] = InstantiablePDT.derive
 

@@ -9,7 +9,7 @@ import traveler.Target.Assumption
 import scala.annotation.switch
 
 trait PDTNumeric[
-    Mapping[_ <: Target] <: Float | Double | Int | Short | Byte | Long,
+    Mapping[_ <: Target] <: PDTNumeric.IntegralTypes,
     P <: PDT[Mapping]
 ]:
   val inst: InstantiablePDT[Mapping, P]
@@ -17,20 +17,30 @@ trait PDTNumeric[
   inline def addSpecific[T <: Target](using T)(using
       num: Numeric[inst.ValueType[T]]
   )(a: P, b: P): P =
-    inst(num.plus(a.asInstanceOf[Mapping[RemoveAssumption[T]]], b.asInstanceOf[Mapping[RemoveAssumption[T]]]))
+    inst(
+      num.plus(
+        a.asInstanceOf[Mapping[RemoveAssumption[T]]],
+        b.asInstanceOf[Mapping[RemoveAssumption[T]]]
+      )
+    )
 
-
-  def times(a: P, b: P): Target ?=> P 
-  inline def timesSpecific[T <: Target](using T)(
-    using num: Numeric[inst.ValueType[T]]
-  )(a: P, b: P): P = 
-    num.plus(a.asInstanceOf[inst.ValueType[T]], b.asInstanceOf[inst.ValueType[T]]).asInstanceOf[P]
-    //inst(num.plus(inst.unwrap(a), inst.unwrap(b)))
+  def times(a: P, b: P): Target ?=> P
+  inline def timesSpecific[T <: Target](using T)(using
+      num: Numeric[inst.ValueType[T]]
+  )(a: P, b: P): P =
+    num
+      .plus(
+        a.asInstanceOf[inst.ValueType[T]],
+        b.asInstanceOf[inst.ValueType[T]]
+      )
+      .asInstanceOf[P]
+    // inst(num.plus(inst.unwrap(a), inst.unwrap(b)))
 
 object PDTNumeric:
-  type NumericTypes = Float | Double | Int | Short | Byte | Long
+  type NumericTypes = Float | Double | IntegralTypes
+  type IntegralTypes = Byte | Short | Int | Long
   inline def derive[
-      Mapping[_ <: Target] <: NumericTypes,
+      Mapping[_ <: Target] <: IntegralTypes,
       P <: PDT[Mapping]
   ](using it: InstantiablePDT[Mapping, P], eqG: P =:= PDT[Mapping]) =
     new PDTNumeric[Mapping, P]:
@@ -55,6 +65,6 @@ object PDTNumeric:
 
       def times(a: P, b: P): Target ?=> P =
         withContext(
-          [T <: Target] => 
+          [T <: Target] =>
             T ?=> num => inst(num.times(inst.unwrap(a), inst.unwrap(b)))
         )

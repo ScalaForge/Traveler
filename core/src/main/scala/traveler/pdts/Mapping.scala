@@ -15,7 +15,7 @@ trait Mapping:
 
 type NumericTypes = Byte | Short | Int | Long | Float | Double
 trait NumericMapping[M[_ <: Target] <: NumericTypes]:
-  val fn: Target => Int 
+  val fn: Target => Int
   def apply(t: Target): Int = fn(t)
   type _M[T <: Target] = NumericTypes
 
@@ -69,14 +69,11 @@ object NumericMapping:
 
     //   res
 
-
-    val tr = TypeRepr.of[_M] .asType
-
+    val tr = TypeRepr.of[_M].asType
 
     val tt = '{
-      type M[T <: Target] <: NumericTypes = T match 
+      type M[T <: Target] <: NumericTypes = T match
         case Target.LinuxX64 | Target.MacX64 => Int
-        case Target.WinX64 => Float
+        case Target.WinX64                   => Float
     }.asTerm
     ???
-

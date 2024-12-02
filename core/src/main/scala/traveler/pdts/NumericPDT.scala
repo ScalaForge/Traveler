@@ -17,7 +17,7 @@ opaque type NumericPDT[
   Long
 
 object NumericPDT:
-  type NumericTypes = Byte | Short | Int | Long | Float | Double | Int23 
+  type NumericTypes = Byte | Short | Int | Long | Float | Double | Int23
 
   inline def unwrap[Mapping <: NumericMapping[?] & Singleton, NP <: NumericPDT[
     Mapping
@@ -25,15 +25,10 @@ object NumericPDT:
       t: T,
       eqG: NP =:= NumericPDT[Mapping],
       mapping: ValueOf[Mapping]
-  )(v: NP): mapping.value._M[T] = 
+  )(v: NP): mapping.value._M[T] =
     val typ = mapping.value.fn(t)
-    (typ: @switch) match 
+    (typ: @switch) match
       case 1 => v.toByte.asInstanceOf[mapping.value._M[T]]
       case 2 => v.toShort.asInstanceOf[mapping.value._M[T]]
       case 3 => v.toInt.asInstanceOf[mapping.value._M[T]]
       case 4 => v.toLong.asInstanceOf[mapping.value._M[T]]
-
-            
-        
-          
-        
