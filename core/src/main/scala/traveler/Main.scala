@@ -5,9 +5,9 @@ import scala.compiletime.codeOf
 import traveler.pdts.PDTNumeric.IntegralTypes
 
 @main def program =
-  val a = CLong.given_InstantiablePDT_Mapping_CLong.unspecific(5L)
-  val b = CLong.given_InstantiablePDT_Mapping_CLong.unspecific(10)
-  val c = CLong.given_InstantiablePDT_Mapping_CLong.unspecific(6L)
+  val a = CLong.given_InstantiableNPDT_Mapping_CLong.unspecific(5L)
+  val b = CLong.given_InstantiableNPDT_Mapping_CLong.unspecific(10)
+  val c = CLong.given_InstantiableNPDT_Mapping_CLong.unspecific(6L)
   // broken
   for
     readyA <- a
@@ -27,23 +27,25 @@ import traveler.pdts.PDTNumeric.IntegralTypes
     )
 
   Target.assume[Target.LinuxX64] {
-    val d = CLong.given_InstantiablePDT_Mapping_CLong(5L)
-    val e = CLong.given_InstantiablePDT_Mapping_CLong(6L)
+    val d = CLong.given_InstantiableNPDT_Mapping_CLong(5L)
+    val e = CLong.given_InstantiableNPDT_Mapping_CLong(6L)
     println(CLong.given_PDTNumeric_Mapping_CLong.add(d, e))
     println("raw sum")
     println(
-      CLong.given_InstantiablePDT_Mapping_CLong.unwrap(
+      CLong.given_InstantiableNPDT_Mapping_CLong.unwrap(
         d
-      ) + CLong.given_InstantiablePDT_Mapping_CLong.unwrap(e)
+      ) + CLong.given_InstantiableNPDT_Mapping_CLong.unwrap(e)
     )
   }
 
   println(Target.assume[Target.WinX64] {
-    val d = CLong.given_InstantiablePDT_Mapping_CLong(5)
-    val e = CLong.given_InstantiablePDT_Mapping_CLong(7)
+    val d = CLong.given_InstantiableNPDT_Mapping_CLong(5)
+    val e = CLong.given_InstantiableNPDT_Mapping_CLong(7)
     println("i shouldn't run!!")
     println(CLong.given_PDTNumeric_Mapping_CLong.add(d, e))
   })
+
+  println(CLong.given_InstantiableNPDT_Mapping_CLong.fromMinima(2))
 
   // println(NumericMapping.create[M].fn(LinuxX64))
 

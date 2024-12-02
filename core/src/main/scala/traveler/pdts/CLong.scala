@@ -1,6 +1,6 @@
 package traveler
 
-import traveler.pdts.InstantiablePDT
+import traveler.pdts.InstantiableNPDT
 import traveler.pdts.PDT
 import traveler.pdts.PDTNumeric
 import scala.compiletime.codeOf
@@ -12,6 +12,6 @@ object CLong:
     case Target.LinuxX64 | Target.MacX64 => Long
     case Target.WinX64                   => Int
 
-  given InstantiablePDT[Mapping, CLong] = InstantiablePDT.derive
+  given InstantiableNPDT[Mapping, CLong] = InstantiableNPDT.derive
 
   given PDTNumeric[Mapping, CLong] = PDTNumeric.derive

@@ -26,7 +26,11 @@ object InstantiableNPDT:
         ipdt.apply(v)
       def fromMinima(
           value: MappingMinima[Mapping, SupportedTargets, Long]
-      )(using target: Target): P = ???
+      )(using target: Target): P = target.reveal[[T <: Target] =>> Tuple1[
+        NumConvert[Mapping[T], MappingMinima[Mapping, SupportedTargets, Long]]
+      ], P](
+        [T <: Target] => (t: T) ?=> tup => ipdt(tup._1(value))
+      )
       def unspecific(u: SumMapping[Mapping, SupportedTargets])(using
           t: Target
       ): Option[P] = ipdt.unspecific(u)
