@@ -40,3 +40,27 @@ type MappingMinima[Mapping[
     case h *: t =>
       MappingMinima[Mapping, t, IntegralMinimum[Mapping[h], Minima]]
     case EmptyTuple => Minima
+
+trait ExtractMapping[P]:
+  type Mapping[_ <: Target] <: Matchable
+
+object ExtractMapping:
+  def generate[_Mapping[_ <: Target] <: Matchable, P <: PDT]
+      : ExtractMapping[P] = new ExtractMapping[P]:
+    type Mapping[T <: Target] = _Mapping[T]
+  given forAllPdts[_Mapping[_ <: Target] <: Matchable, P <: PDT]
+      : (ExtractMapping[P] { type Mapping[T <: Target] = _Mapping[T] }) =
+    new ExtractMapping[P] {
+      type Mapping[T <: Target] = _Mapping[T]
+    }
+
+trait ExtractIntegralMapping[P] extends ExtractMapping[P]:
+  type Mapping[_ <: Target] <: PDTNumeric.IntegralTypes
+
+object ExtractIntegralMapping:
+  given forSomePdts[_Mapping[_ <: Target] <: PDTNumeric.IntegralTypes, P <: PDT]
+      : (ExtractIntegralMapping[P] {
+        type Mapping[T <: Target] = _Mapping[T]
+      }) =
+    new ExtractIntegralMapping[P]:
+      type Mapping[T <: Target] = _Mapping[T]

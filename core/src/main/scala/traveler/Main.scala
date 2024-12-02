@@ -3,11 +3,14 @@ package traveler
 import traveler.Target.{WinX64, LinuxX64, MacX64}
 import scala.compiletime.codeOf
 import traveler.pdts.PDTNumeric.IntegralTypes
+import traveler.pdts.PDT
 
 @main def program =
-  val a = CLong.given_InstantiableNPDT_Mapping_CLong.unspecific(5L)
-  val b = CLong.given_InstantiableNPDT_Mapping_CLong.unspecific(10)
-  val c = CLong.given_InstantiableNPDT_Mapping_CLong.unspecific(6L)
+  // println(Macro.myMac)
+
+  val a = CLong.inst.unspecific(5L)
+  val b = CLong.inst.unspecific(10)
+  val c = CLong.inst.unspecific(6L)
   // broken
   for
     readyA <- a
@@ -15,7 +18,7 @@ import traveler.pdts.PDTNumeric.IntegralTypes
   do
     println("I shouldn't run!!")
     println(
-      CLong.given_PDTNumeric_Mapping_CLong.add(readyA, readyB)
+      readyA + readyB
     )
 
   for
@@ -23,29 +26,35 @@ import traveler.pdts.PDTNumeric.IntegralTypes
     readyC <- c
   do
     println(
-      CLong.given_PDTNumeric_Mapping_CLong.add(readyA, readyC)
+      readyA + readyC
     )
 
   Target.assume[Target.LinuxX64] {
-    val d = CLong.given_InstantiableNPDT_Mapping_CLong(5L)
-    val e = CLong.given_InstantiableNPDT_Mapping_CLong(6L)
-    println(CLong.given_PDTNumeric_Mapping_CLong.add(d, e))
+    val d = PDT[CLong](5L)
+    val e = PDT[CLong](6L)
+
+    println(CLong.inst.unwrap(d))
+
+    println(CLong.given_PDTNumeric_CLong.add(d, e))
     println("raw sum")
-    println(
-      CLong.given_InstantiableNPDT_Mapping_CLong.unwrap(
-        d
-      ) + CLong.given_InstantiableNPDT_Mapping_CLong.unwrap(e)
-    )
+    val f = d.unwrap + e.unwrap
+    println(f)
+  }
+
+  val f: CLong = 'a'.asInstanceOf[CLong]
+
+  Target.assume[Target.LinuxX64] {
+    f.unwrap
   }
 
   println(Target.assume[Target.WinX64] {
-    val d = CLong.given_InstantiableNPDT_Mapping_CLong(5)
-    val e = CLong.given_InstantiableNPDT_Mapping_CLong(7)
+    val d = CLong.inst(5)
+    val e = CLong.inst(7)
     println("i shouldn't run!!")
-    println(CLong.given_PDTNumeric_Mapping_CLong.add(d, e))
+    println(d + e)
   })
 
-  println(CLong.given_InstantiableNPDT_Mapping_CLong.fromMinima(2))
+  println(PDT[CLong].fromMinima(2))
 
   // println(NumericMapping.create[M].fn(LinuxX64))
 

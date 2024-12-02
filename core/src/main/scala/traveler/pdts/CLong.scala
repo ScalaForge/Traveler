@@ -1,17 +1,23 @@
 package traveler
 
-import traveler.pdts.InstantiableNPDT
 import traveler.pdts.PDT
 import traveler.pdts.PDTNumeric
-import scala.compiletime.codeOf
+import traveler.pdts.IntegralMapping
 
-opaque type CLong <: PDT[CLong.Mapping] = PDT[CLong.Mapping]
+import compiletime.{codeOf, error}
+
+opaque type CLong <: PDT = PDT
+
+opaque type MT >: Int = Int
+
+object MT:
+  def apply(i: Int): MT = i
 
 object CLong:
-  type Mapping[T <: Target] <: PDTNumeric.IntegralTypes = T match
+  type M[T <: Target] = T match
     case Target.LinuxX64 | Target.MacX64 => Long
     case Target.WinX64                   => Int
+  given inst: IntegralMapping[CLong, M] = IntegralMapping.derive
+  // given inst: InstantiablePDT[CLong] = InstantiablePDT.derive(using mapping)
 
-  given InstantiableNPDT[Mapping, CLong] = InstantiableNPDT.derive
-
-  given PDTNumeric[Mapping, CLong] = PDTNumeric.derive
+  given PDTNumeric[CLong] = PDTNumeric.derive

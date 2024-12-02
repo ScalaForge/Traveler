@@ -1,29 +1,45 @@
 package traveler.pdts
 
 import traveler.Target
-import traveler.Target.SupportedTargets
-import traveler.Target.LinuxX64
-import traveler.Target.WinX64
-import scala.reflect.TypeTest
-import traveler.Target.MacX64
-import scala.annotation.nowarn
-import scala.annotation.switch
+import scala.reflect.ClassTag
+import traveler.pdts.Mapping
 
-opaque type PDT[TargetMapping[_ <: Target] <: Matchable] <: Matchable =
+opaque type PDT <: Matchable =
   Matchable
 
 object PDT:
-  def apply[Mapping[_ <: Target] <: Matchable, P <: PDT[Mapping], T <: Target](
-      using
+  def get[Mapping[_ <: Target] <: Matchable, P, T <: Target](using
       t: T,
-      eqG: PDT[Mapping] =:= P
+      eqG: PDT =:= P
   )(v: Mapping[T]): P =
     eqG(v)
 
-  def unwrap[Mapping[_ <: Target] <: Matchable, P <: PDT[Mapping], T <: Target](
-      using
+  def unwrap[Mapping[_ <: Target] <: Matchable, P, T <: Target](using
       t: T,
-      eqG: P =:= PDT[Mapping]
+      ct: ClassTag[Mapping[T]],
+      eqG: P =:= PDT
   )(v: P): Mapping[T] = eqG(v) match
     case res: Mapping[T] => res
     case _               => throw new Error("I shouldn't be here")
+
+  extension [P <: PDT](a: P)(using num: PDTNumeric[P])
+    def +(b: P): P = num.add(a, b)
+    def *(b: P): P = num.times(a, b)
+
+  class CurriedApplication[P <: PDT]:
+    def apply[T <: Target](using t: T, mapping: Mapping[P, ?])(
+        v: mapping._M[T]
+    ): P = mapping(v)
+    def unspecific(using t: Target, m: Mapping[P, ?])(
+        u: SumMapping[m._M, Target.SupportedTargets]
+    ): Option[P] = m.unspecific(u)
+    def fromMinima[M[_ <: Target] <: PDTNumeric.IntegralTypes](using
+        target: Target,
+        m: IntegralMapping[P, M]
+    )(
+        value: MappingMinima[M, Target.SupportedTargets, Long]
+    ): P = m.fromMinima(value)
+  def apply[P <: PDT]: CurriedApplication[P] = new CurriedApplication[P]
+
+  extension [P <: PDT](a: P)(using mapping: Mapping[P, ?])
+    def unwrap[T <: Target](using t: T) = mapping.unwrap(a)
