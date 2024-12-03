@@ -4,8 +4,6 @@ import traveler.pdts.PDT
 import traveler.pdts.PDTNumeric
 import traveler.pdts.IntegralMapping
 
-import compiletime.{codeOf, error}
-
 opaque type CFoo <: PDT = PDT
 
 object CFoo: 
