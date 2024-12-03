@@ -1,0 +1,3 @@
+package traveler
+
+object CLongSpec

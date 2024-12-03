@@ -33,19 +33,29 @@ import traveler.pdts.PDT
     val d = PDT[CLong](5L)
     val e = PDT[CLong](6L)
 
-    println(CLong.inst.unwrap(d))
+    println(d.unwrap)
 
-    println(CLong.given_PDTNumeric_CLong.add(d, e))
+    println(d + e)
     println("raw sum")
     val f = d.unwrap + e.unwrap
     println(f)
   }
 
-  val f: CLong = 'a'.asInstanceOf[CLong]
+  Target.assume[(Target.LinuxX64, Target.MacX64)]:
+    val d = PDT[CLong](5L)
+    val e = PDT[CLong](6L)
 
-  Target.assume[Target.LinuxX64] {
-    f.unwrap
-  }
+    println(d.unwrap)
+    println(d + e)
+    println("multiplat raw sum")
+    val f = d.unwrap + e.unwrap
+    println(f)
+
+  // val f: CLong = 'a'.asInstanceOf[CLong]
+
+  // Target.assume[Target.LinuxX64] {
+  //   f.unwrap
+  // }
 
   println(Target.assume[Target.WinX64] {
     val d = CLong.inst(5)
