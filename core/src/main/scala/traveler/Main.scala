@@ -8,9 +8,9 @@ import traveler.pdts.PDT
 @main def program =
   // println(Macro.myMac)
 
-  val a = CLong.inst.unspecific(5L)
-  val b = CLong.inst.unspecific(10)
-  val c = CLong.inst.unspecific(6L)
+  val a = PDT[CLong].unspecific(5L)
+  val b = PDT[CLong].unspecific(10)
+  val c = PDT[CLong].unspecific(6L)
   // broken
   for
     readyA <- a
@@ -41,15 +41,16 @@ import traveler.pdts.PDT
     println(f)
   }
 
-  Target.assume[(Target.LinuxX64, Target.MacX64)]:
-    val d = PDT[CLong](5L)
-    val e = PDT[CLong](6L)
 
-    println(d.unwrap)
-    println(d + e)
-    println("multiplat raw sum")
-    val f = d.unwrap + e.unwrap
-    println(f)
+  val g = PDT[CLong].fromMinima(5)
+  val h = PDT[CLong].fromMinima(6)
+  Target.assume[(Target.LinuxX64, Target.MacX64)] { 
+
+    val i = PDT[CFoo].fromMinima(10: Short)
+
+    println(g.unwrap + h.unwrap)
+    println(i.toMaxima + g.toMaxima)
+  }
 
   // val f: CLong = 'a'.asInstanceOf[CLong]
 
