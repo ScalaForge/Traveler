@@ -42,6 +42,6 @@ object PDT:
 
   extension [P <: PDT](a: P)(using mapping: Mapping[P, ?])
     def unwrap[T <: Target](using t: T) = mapping.unwrap(a)
-  
+
   extension [P <: PDT](a: P)(using mapping: IntegralMapping[P, ?])
     def toMaxima(using target: Target) = mapping.toMaxima(a)

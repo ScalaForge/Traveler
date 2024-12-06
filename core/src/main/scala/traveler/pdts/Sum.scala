@@ -34,23 +34,22 @@ type IntegralMinimum[
       case _    => B
 
 type IntegralMaximum[
-  A <: PDTNumeric.IntegralTypes,
-  B <: PDTNumeric.IntegralTypes
-] <: PDTNumeric.IntegralTypes = A match 
-  case Long => Long 
-  case Int => 
-    B match 
-      case Long => Long 
-      case _ => Int 
-  case Short => 
-    B match 
+    A <: PDTNumeric.IntegralTypes,
+    B <: PDTNumeric.IntegralTypes
+] <: PDTNumeric.IntegralTypes = A match
+  case Long => Long
+  case Int =>
+    B match
+      case Long => Long
+      case _    => Int
+  case Short =>
+    B match
       case Long | Int => B
-      case _ => Short
-  case Byte => 
-    B match 
+      case _          => Short
+  case Byte =>
+    B match
       case Byte => Byte
-      case _ => B
-    
+      case _    => B
 
 type MappingMinima[Mapping[
     _ <: Target
@@ -60,9 +59,11 @@ type MappingMinima[Mapping[
       MappingMinima[Mapping, t, IntegralMinimum[Mapping[h], Minima]]
     case EmptyTuple => Minima
 
-type MappingMaxima[Mapping[_ <: Target] <: PDTNumeric.IntegralTypes, TargetTup <: Tuple, Maxima <: PDTNumeric.IntegralTypes] <: PDTNumeric.IntegralTypes =
-  TargetTup match 
-    case h *: t => 
+type MappingMaxima[Mapping[
+    _ <: Target
+] <: PDTNumeric.IntegralTypes, TargetTup <: Tuple, Maxima <: PDTNumeric.IntegralTypes] <: PDTNumeric.IntegralTypes =
+  TargetTup match
+    case h *: t =>
       MappingMaxima[Mapping, t, IntegralMaximum[Mapping[h], Maxima]]
     case EmptyTuple => Maxima
 

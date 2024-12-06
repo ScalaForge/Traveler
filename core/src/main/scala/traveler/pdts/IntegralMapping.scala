@@ -48,7 +48,8 @@ object IntegralMapping:
       def fromMinima(
           value: MappingMinima[M, SupportedTargets, Long]
       )(using target: Target): P = withConvertOrCT(
-        [T <: Target] => (t: T) ?=> (numConvMin, _,_) => PDT.get(numConvMin(value))
+        [T <: Target] =>
+          (t: T) ?=> (numConvMin, _, _) => PDT.get(numConvMin(value))
       )
 
       def toMaxima(
@@ -69,7 +70,7 @@ object IntegralMapping:
         withConvertOrCT(
           [T <: Target] =>
             (t: T) ?=>
-              (_,_, ct) =>
+              (_, _, ct) =>
                 given ClassTag[M[T]] = ct
                 u match
                   case b: M[T] => Some(PDT.get(b))

@@ -4,6 +4,7 @@ import traveler.Target
 import traveler.Target.SupportedTargets
 import scala.reflect.ClassTag
 import scala.annotation.nowarn
+import scala.compiletime.summonInline
 
 trait Mapping[P, M[_ <: Target] <: Matchable]:
   type _M[T <: Target] = M[T]
@@ -33,11 +34,14 @@ object Mapping:
     def unspecific(
         u: SumMapping[M, SupportedTargets]
     )(using t: Target): Option[P] =
-      withCT(
+      t.reveal[
+        [T <: Target] =>> Tuple1[ClassTag[M[T]]],
+        Option[P]
+      ](
         [T <: Target] =>
-          (t: T) ?=>
+          t ?=>
             ct =>
-              given ClassTag[M[T]] = ct
+              given ClassTag[M[T]] = ct._1
               u match
                 case b: M[T] => Some(PDT.get(b))
                 case _       => None

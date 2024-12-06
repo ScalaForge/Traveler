@@ -7,7 +7,8 @@ object Config {
     organization := "ScalaForge",
     libraryDependencies += "org.scalameta" %% "munit" % "1.0.1" % Test,
     scalacOptions ++= Seq(
-      "-Wunused", "all",
+      "-Wunused",
+      "all",
       "-Wall"
     )
   )
