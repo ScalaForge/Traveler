@@ -25,20 +25,10 @@ object PDT:
     def +(b: P): P = num.add(a, b)
     def *(b: P): P = num.times(a, b)
 
-  class CurriedApplication[P <: PDT]:
-    def apply[T <: Target](using t: T, mapping: Mapping[P, ?])(
-        v: mapping._M[T]
-    ): P = mapping(v)
-    def unspecific(using t: Target, m: Mapping[P, ?])(
-        u: SumMapping[m._M, Target.SupportedTargets]
-    ): Option[P] = m.unspecific(u)
-    def fromMinima[M[_ <: Target] <: PDTNumeric.IntegralTypes](using
-        target: Target,
-        m: IntegralMapping[P, M]
-    )(
-        value: MappingMinima[M, Target.SupportedTargets, Long]
-    ): P = m.fromMinima(value)
-  def apply[P <: PDT]: CurriedApplication[P] = new CurriedApplication[P]
+
+  def apply[P<: PDT](using DummyImplicit)[T <: Target](using t: T, mapping: Mapping[P,?])(v: mapping._M[T]) = mapping(v)
+  def unspecific[P <: PDT](using t: Target, m: Mapping[P, ?])(u: SumMapping[m._M, Target.SupportedTargets]): Option[P] = m.unspecific(u)
+  def fromMinima[P <: PDT](using DummyImplicit)[M[_ <: Target] <: PDTNumeric.IntegralTypes](using target: Target, m: IntegralMapping[P,M])(value: MappingMinima[M, Target.SupportedTargets, Long]): P = m.fromMinima(value)
 
   extension [P <: PDT](a: P)(using mapping: Mapping[P, ?])
     def unwrap[T <: Target](using t: T) = mapping.unwrap(a)
