@@ -3,6 +3,9 @@ package traveler.pdts
 import traveler.Target
 import scala.compiletime.summonInline
 import annotation.nowarn
+import traveler.Target.SupportedTargets
+import traveler.SpecificTarget
+import traveler.pdts.PDTNumeric.IntegralTypes
 
 trait PDTNumeric[
     P
@@ -20,7 +23,7 @@ object PDTNumeric:
   inline def derive[
       P,
       M[_ <: Target] <: PDTNumeric.IntegralTypes
-  ](using _mapping: IntegralMapping[P, M], eqG: P =:= PDT) =
+  ](using pdm: PlatformDependentMapping[P,M]) =
     new PDTNumeric[P]:
       def withContext[A](
           fn: [T <: Target] => (
@@ -29,7 +32,7 @@ object PDTNumeric:
       )(using t: Target) =
         t.reveal[[T <: Target] =>> Tuple1[
           Numeric[M[T]]
-        ], A](
+        ]](
           [T <: Target] => (t: T) ?=> tup => fn[T](tup._1)
         )
 
@@ -37,16 +40,49 @@ object PDTNumeric:
         withContext(
           [T <: Target] =>
             T ?=>
-              num => _mapping(num.plus(_mapping.unwrap(a), _mapping.unwrap(b)))
+              num => pdm(num.plus(pdm.unwrap(a), pdm.unwrap(b)))
         )
 
       def times(a: P, b: P): Target ?=> P =
         withContext(
           [T <: Target] =>
             T ?=>
-              num => _mapping(num.times(_mapping.unwrap(a), _mapping.unwrap(b)))
+              num => pdm(num.times(pdm.unwrap(a), pdm.unwrap(b)))
         )
 
-  extension [P <: PDT](a: P)(using numeric: PDTNumeric[P])
-    def +(b: P): P = numeric.add(a, b)
-    def *(b: P): P = numeric.times(a, b)
+// abstract class DerivePDTNumeric[P <: PDT] extends DerivePDT[P]:
+//   type Mapping[_ <: Target] <: PDTNumeric.IntegralTypes
+//   given pdim: PlatformDependentIntegralMapping[P, Mapping] =
+//     PlatformDependentIntegralMapping.derive
+//   given pdtNumeric: PDTNumeric[P] = PDTNumeric.derive(using pdm)
+
+//   def apply[T <: Target](using
+//       t: T,
+//       pdm: PlatformDependentMapping[P, Mapping]
+//   )(v: Mapping[T]): P = pdm.apply(v)
+//   def unspecific(u: SumMapping[Mapping, SupportedTargets])(using
+//       t: Target,
+//       pdm: PlatformDependentMapping[P, Mapping]
+//   ): Option[P] = pdm.unspecific(u)
+//   def fromMinima(value: MappingMinima[Mapping, SupportedTargets, Long])(using
+//       target: Target,
+//       pdim: PlatformDependentIntegralMapping[P, Mapping]
+//   ): P = pdim.fromMinima(value)
+
+//   extension (a: P)(using num: PDTNumeric[P])
+//     def +(b: P): P = num.add(a, b)
+//     def *(b: P): P = num.times(a, b)
+
+//   extension (a: P)
+//     def +&[T <: Target, M[_ <: Target] <: IntegralTypes](b: P)(using
+//       t: T,
+//       targetEvidence: SpecificTarget[T],
+//       pdm: PlatformDependentMapping[P, M],
+//       num: Numeric[M[T]]
+//     ): P = pdm(num.plus(pdm.unwrap(a), pdm.unwrap(b)))
+//     def *&[T <: Target, M[_ <: Target] <: IntegralTypes](b: P)(using
+//       t: T,
+//       targetEvidence: SpecificTarget[T],
+//       pdm: PlatformDependentMapping[P, M],
+//       num: Numeric[M[T]]
+//     ): P = pdm(num.times(pdm.unwrap(a), pdm.unwrap(b)))

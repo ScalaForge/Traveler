@@ -13,3 +13,8 @@ lazy val `core-bench` = project
   .dependsOn(core)
 
 lazy val root = project.in(file(".")).aggregate(core, `core-bench`)
+
+lazy val `demo-native` = project
+  .settings(Config.nativeDemo)
+  .enablePlugins(GraalVMNativeImagePlugin)
+  .dependsOn(core)

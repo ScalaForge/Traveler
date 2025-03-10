@@ -1,2 +1,3 @@
 addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.4.3")
 addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.2")
+addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.11.1")

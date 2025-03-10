@@ -9,12 +9,6 @@ type SumMapping[
   case h *: t     => Mapping[h] | SumMapping[Mapping, t]
   case EmptyTuple => Nothing
 
-//Double > Long > Float > Int > Short > Byte
-//Double/Long > Float/Int > Short > Byte
-//Double > Long > Long52 > Float > Int > Int23 > Short > Byte
-
-//Double > Float > Long > Long52 > Int > Int23 > Short > Byte
-
 type IntegralMinimum[
     A <: PDTNumeric.IntegralTypes,
     B <: PDTNumeric.IntegralTypes

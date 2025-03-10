@@ -1,16 +1,10 @@
 package traveler
 
-import scala.compiletime.{
-  erasedValue,
-  summonInline,
-  summonAll,
-  error,
-  uninitialized
-}
+import scala.compiletime.summonAll
 import scala.annotation.switch
 
 sealed trait Target:
-  inline def reveal[H[_ <: Target] <: Tuple, Out](
+  inline def reveal[H[_ <: Target] <: Tuple](using DummyImplicit)[Out](
       fn: [T <: Target] => T ?=> H[T] => Out
   ): Out =
     (this: @switch) match
@@ -21,7 +15,7 @@ sealed trait Target:
       case given Target.WinX64 =>
         fn(summonAll[H[Target.WinX64]])
 
-object Target:
+object Target{
   sealed class LinuxX64 private[Target] extends Target
   sealed class WinX64 private[Target] extends Target
   sealed class MacX64 private[Target] extends Target
@@ -33,3 +27,4 @@ object Target:
     LinuxX64
 
   type SupportedTargets = (LinuxX64, WinX64, MacX64)
+}
