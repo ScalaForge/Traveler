@@ -74,10 +74,12 @@ object TravelerPlugin extends AutoPlugin {
   }
 
   def traverseFiles(file: File): Seq[File] =
-    if(file.isDirectory()) {
+    if (file.isDirectory()) {
       file.listFiles().toSeq.flatMap(traverseFiles)
-    } else {
+    } else if (file.getName().matches("""^.*(\.h|\.c|\.hpp|\.cpp)$""")) {
       Seq(file)
+    } else {
+      Seq.empty
     }
 
   def compileCpp(files: Seq[File], s: TaskStreams): File = {

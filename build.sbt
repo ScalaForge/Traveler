@@ -12,7 +12,8 @@ lazy val `core-bench` = project
   .enablePlugins(JmhPlugin)
   .dependsOn(core)
 
-lazy val root = project.in(file(".")).aggregate(core, `core-bench`, `sbt-plugin`)
+lazy val root =
+  project.in(file(".")).aggregate(core, `core-bench`, `sbt-plugin`)
 
 lazy val `sbt-plugin` = project
   .enablePlugins(SbtPlugin)
