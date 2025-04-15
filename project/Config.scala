@@ -4,7 +4,7 @@ import sbt.ScriptedPlugin.autoImport.{scriptedLaunchOpts, scriptedBufferLog}
 
 object Config {
   val baseConfig = Seq(
-    scalaVersion := "3.6.3",
+    scalaVersion := "3.7.0-RC2",
     organization := "ScalaForge",
     libraryDependencies += "org.scalameta" %% "munit" % "1.0.1" % Test,
     scalacOptions ++= Seq(
@@ -21,7 +21,8 @@ object Config {
   )
 
   val coreConfig = baseConfig ++ ccConfig ++ Seq(
-    name := "traveler-core"
+    name := "traveler-core",
+    Test / scalacOptions += "-language:experimental.captureChecking"
   )
 
   val pluginConfig = Seq(
