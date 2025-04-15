@@ -1,0 +1,30 @@
+name: Traveler CI
+on:
+  pull_request:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  format-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: coursier/cache-action@v6
+      - uses: coursier/setup-action@v1
+        with:
+          jvm: temurin:1.23
+          apps: sbt
+      - run: sbt scalafmtCheck scalafmtSbtCheck
+  
+  sbt-plugin-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: coursier/cache-action@v6
+      - uses: coursier/setup-action@v1
+        with:
+          jvm: temurin:1.23
+          apps: sbt
+      - run: sbt sbtPlugin/scripted
+  

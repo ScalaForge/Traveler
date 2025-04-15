@@ -1,6 +1,5 @@
 package traveler
 
-
 // import org.openjdk.jmh.annotations.*
 // import traveler.Target.LinuxX64
 // import java.util.concurrent.TimeUnit
@@ -17,7 +16,7 @@ package traveler
 //   val clong1 = CLong.given_InstantiablePDT_Mapping_CLong.unspecific(5l).get
 //   val clong2 = CLong.given_InstantiablePDT_Mapping_CLong.unspecific(10l).get
 
-//   val long1 = 5l 
+//   val long1 = 5l
 //   val long2 = 10l
 
 //   val clong3 = NumericData(5f)
@@ -34,40 +33,32 @@ package traveler
 //     bh.consume(CLong.given_PDTNumeric_Mapping_CLong.addSpecific(clong1, clong2))
 
 //   @Benchmark
-//   def add(bh: Blackhole) = 
+//   def add(bh: Blackhole) =
 //     bh.consume(CLong.given_PDTNumeric_Mapping_CLong.add(clong1, clong2))
 
 //   @Benchmark
 //   def addLong(bh: Blackhole) =
 //     bh.consume(Numeric[Long].plus(long1, long2))
 
-//   @Benchmark 
-//   def addNumericData(bh: Blackhole) = 
+//   @Benchmark
+//   def addNumericData(bh: Blackhole) =
 //     bh.consume(
 //       NumericData(summon[Numeric[Float]].plus(clong3.reveal, clong4.reveal))
 //     )
 
-
 //   @Benchmark
-//   def mulSpecific = 
+//   def mulSpecific =
 //     given LinuxX64.type = LinuxX64
 //     CLong.given_PDTNumeric_Mapping_CLong.timesSpecific(clong1, clong2)
 
 //   @Benchmark
-//   def mul = 
+//   def mul =
 //     CLong.given_PDTNumeric_Mapping_CLong.times(clong1, clong2)
 
-//   @Benchmark 
-//   def mulLong = 
+//   @Benchmark
+//   def mulLong =
 //     Numeric[Long].times(long1, long2)
 
 //   @Benchmark
-//   def mulNumericData = 
+//   def mulNumericData =
 //     NumericData(summon[Numeric[Float]].times(clong3.reveal, clong4.reveal))
-
-  
-
-  
-  
-
-

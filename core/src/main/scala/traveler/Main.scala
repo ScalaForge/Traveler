@@ -87,7 +87,6 @@ import traveler.pdts.PDT
   PDT.unspecific[CFoo](5)
   PDT.unspecific[CFoo](5: Short)
 
-
   val aa: CFoo = PDT.fromMinima[CFoo](5: Short)
   val ab: Long = aa.toMaxima
 
