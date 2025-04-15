@@ -56,6 +56,7 @@ object TravelerPlugin extends AutoPlugin {
       out: File,
       s: TaskStreams
   ): Seq[File] = {
+    s.log.info(s"Includes: \n${includes.map(_.toString()).mkString("\n\t", "\n\t","")}")
     val compileableFiles = files.flatMap(traverseFiles).map(_.getAbsolutePath())
     val command = Seq("clang") ++
       includes
@@ -76,7 +77,7 @@ object TravelerPlugin extends AutoPlugin {
   def traverseFiles(file: File): Seq[File] =
     if (file.isDirectory()) {
       file.listFiles().toSeq.flatMap(traverseFiles)
-    } else if (file.getName().matches("""^.*(\.h|\.c|\.hpp|\.cpp)$""")) {
+    } else if (file.getName().matches("""^.*(\.c|\.cpp)$""")) {
       Seq(file)
     } else {
       Seq.empty
