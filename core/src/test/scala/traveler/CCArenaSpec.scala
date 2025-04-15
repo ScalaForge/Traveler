@@ -13,19 +13,23 @@ class CCArenaSpec extends munit.FunSuite:
     )
 
   test("multiple shared arenas are allowed"):
-    CCArena.shared: 
+    CCArena.shared:
       val a = CCArena()
       val r = CCArena.shared:
         a.get
       r.toString()
 
+  test("multiple confined arenas are allowed"):
+    CCArena.confined:
+      val a = CCArena()
+      val r = CCArena.confined:
+        a.get
+      r.toString()
+
   test("shouldn't compile"):
-    CCArena.confined: 
+    CCArena.confined:
       val a = CCArena()
       val b: CCSharedArena^ = ???
       val r = NThread.inner(using b):
-        a.get.toString
-      r
-
-      
-        
+        b.get
+      r.toString()

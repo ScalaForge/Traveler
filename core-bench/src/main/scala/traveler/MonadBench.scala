@@ -27,5 +27,4 @@ class MonadBench {
       c = a + b
     yield c * a
     bh.consume(res)
-
 }
