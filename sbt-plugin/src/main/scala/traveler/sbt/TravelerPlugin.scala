@@ -56,7 +56,9 @@ object TravelerPlugin extends AutoPlugin {
       out: File,
       s: TaskStreams
   ): Seq[File] = {
-    s.log.info(s"Includes: \n${includes.map(_.toString()).mkString("\n\t", "\n\t","")}")
+    s.log.info(
+      s"Includes: \n${includes.map(_.toString()).mkString("\n\t", "\n\t", "")}"
+    )
     val compileableFiles = files.flatMap(traverseFiles).map(_.getAbsolutePath())
     val command = Seq("clang") ++
       includes

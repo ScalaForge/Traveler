@@ -15,7 +15,6 @@ lazy val `core-bench` = project
   .enablePlugins(JmhPlugin)
   .dependsOn(core)
 
-
 lazy val `sbt-plugin` = project
   .enablePlugins(SbtPlugin)
   .settings(
